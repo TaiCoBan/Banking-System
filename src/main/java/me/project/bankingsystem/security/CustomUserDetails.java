@@ -19,7 +19,7 @@ public class CustomUserDetails implements UserDetails {
         password = customer.getPassword();
         List<GrantedAuthority> list = new ArrayList<>();
         for (String role : customer.getRoles().split(",")) {
-            SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority(role)
+            SimpleGrantedAuthority simpleGrantedAuthority = new SimpleGrantedAuthority("ROLE_" + role);
             list.add(simpleGrantedAuthority);
         }
         authorities = list;
@@ -41,21 +41,21 @@ public class CustomUserDetails implements UserDetails {
 
     @Override
     public boolean isAccountNonExpired() {
-        return UserDetails.super.isAccountNonExpired();
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return UserDetails.super.isAccountNonLocked();
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return UserDetails.super.isCredentialsNonExpired();
+        return true;
     }
 
     @Override
     public boolean isEnabled() {
-        return UserDetails.super.isEnabled();
+        return true;
     }
 }
