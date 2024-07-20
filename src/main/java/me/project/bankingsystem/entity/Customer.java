@@ -26,4 +26,10 @@ public class Customer {
     private String phoneNumber;
     @OneToMany(mappedBy = "customer")
     private List<Account> account_id;
+    @Column(name = "username", nullable = false, unique = true)
+    private String username;
+    @Column(name = "password", nullable = false)
+    private String password;
+    @Column(name = "roles", nullable = false)
+    private String roles = "USER";
 }
