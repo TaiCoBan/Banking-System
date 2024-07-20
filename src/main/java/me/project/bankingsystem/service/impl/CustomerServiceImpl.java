@@ -5,6 +5,9 @@ import me.project.bankingsystem.exception.NotFoundException;
 import me.project.bankingsystem.repository.CustomerRepo;
 import me.project.bankingsystem.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +23,20 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private Customer getCurrentCustomer() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication != null && authentication.isAuthenticated()) {
+            Object principal = authentication.getPrincipal();
+
+            if (principal instanceof UserDetails) {
+                Optional<Customer> customer = repo.findByUsername(((UserDetails) principal).getUsername());
+                return customer.get();
+            }
+        }
+
+        throw new NotFoundException("Customer Not Found");
+    }
 
     @Override
     public Customer save(Customer customer) {
@@ -33,34 +50,38 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public Optional<Customer> findById(Long id) {
-        Optional<Customer> customer = repo.findById(id);
-        if (customer.isEmpty()) {
-            throw new NotFoundException("Customer Not Found");
-        }
-        return customer;
+    public Customer get() {
+        return getCurrentCustomer();
     }
 
     @Override
     public Customer update(Long id, Customer customer) {
-        Optional<Customer> exist = repo.findById(id);
-        if (exist.isEmpty()) {
-            throw new NotFoundException("Customer Not Found");
+        Customer current = getCurrentCustomer();
+
+        if (current.getId() == id || current.getRoles().contains("ADMIN")) {
+
+            Optional<Customer> exist = repo.findById(id);
+
+            if (exist.isPresent()) {
+                Customer newCus = exist.get();
+
+                newCus.setFirstName(customer.getFirstName());
+                newCus.setLastName(customer.getLastName());
+                newCus.setBirth(customer.getBirth());
+                newCus.setPhoneNumber(customer.getPhoneNumber());
+                newCus.setPassword(passwordEncoder.encode(customer.getPassword()));
+
+                return repo.save(newCus);
+            }
+
         }
 
-        Customer update = exist.get();
-        update.setFirstName(customer.getFirstName());
-        update.setLastName(customer.getLastName());
-        update.setBirth(customer.getBirth());
-        update.setAccount_id(customer.getAccount_id());
-        update.setPassword(customer.getPassword());
-
-        return repo.save(update);
+        throw new NotFoundException("Customer Not Found");
     }
 
     @Override
     public void delete(Long id) {
-        if (findById(id).isEmpty()) {
+        if (repo.findById(id).isEmpty()) {
             throw new NotFoundException("Customer Not Found");
         }
         repo.deleteById(id);

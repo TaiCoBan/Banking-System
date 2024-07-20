@@ -2,11 +2,8 @@ package me.project.bankingsystem.controller;
 
 import me.project.bankingsystem.entity.Customer;
 import me.project.bankingsystem.entity.Response;
-import me.project.bankingsystem.exception.NotFoundException;
 import me.project.bankingsystem.service.CustomerService;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,9 +23,9 @@ public class CustomerController {
         return ResponseEntity.ok().body(new Response(HttpStatus.OK, "Add Customer Successfully"));
     }
 
-    @GetMapping("get/{id}")
-    public Customer findById(@PathVariable Long id) {
-        return service.findById(id).get();
+    @GetMapping("get")
+    public Customer findById() {
+        return service.get();
     }
 
     @GetMapping("get-all")
