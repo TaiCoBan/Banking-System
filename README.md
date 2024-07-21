@@ -22,6 +22,8 @@
       Foreign Key: customer_id in account Table is referencing id in customer Table.
 
 ## Service
-  ### Roles-based 
+  ### Authentication
+  ### Authorization
+    Roles-based 
     - "USER": add customer, update customer's information
     - "ADMIN": /customers/** 

@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/accounts/")
 public class AccountController {
@@ -24,6 +26,11 @@ public class AccountController {
     @GetMapping("get/{id}")
     public ResponseEntity<Account> findById(@PathVariable Long id) {
         return ResponseEntity.ok().body(service.findById(id).get());
+    }
+
+    @GetMapping("get-all/{id}")
+    public ResponseEntity<List<Account>> findAll(@PathVariable Long id) {
+        return ResponseEntity.ok().body(service.findAll(id));
     }
 
     @PutMapping("update/{id}")

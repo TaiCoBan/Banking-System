@@ -27,13 +27,20 @@ public class SecurityConfig {
             "/customers/get",
             "/customers/update/{id}",
             "/accounts/create",
-            "/accounts/get",
-            "/account/update"
+            "/accounts/get/{id}",
+            "/accounts/get-all/{id}",
+            "/account/update/{id}",
+            "/accounts/delete/{id}"
     };
 
     private static final String[] ADMIN_SOURCES = {
-            "/customers/**",
-            "/account/**"
+            "/customers/get-all",
+            "/customers/delete/{id}",
+            "/accounts/create",
+            "/accounts/get/{id}",
+            "/accounts/get-all/{id}",
+            "/account/update/{id}",
+            "/accounts/delete/{id}"
     };
 
     @Bean
@@ -42,7 +49,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(PUBLIC_SOURCES).permitAll()
-                        .requestMatchers(USER_SOURCES).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(USER_SOURCES).hasAnyRole("USER")
                         .requestMatchers(ADMIN_SOURCES).hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())

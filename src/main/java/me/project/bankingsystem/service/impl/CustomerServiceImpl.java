@@ -4,6 +4,7 @@ import me.project.bankingsystem.entity.Customer;
 import me.project.bankingsystem.exception.NotFoundException;
 import me.project.bankingsystem.repository.CustomerRepo;
 import me.project.bankingsystem.service.CustomerService;
+import me.project.bankingsystem.service.util.CustomerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,7 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Service("customer_service_impl")
+@Service
 public class CustomerServiceImpl implements CustomerService {
 
     @Autowired
@@ -23,20 +24,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    private Customer getCurrentCustomer() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        if (authentication != null && authentication.isAuthenticated()) {
-            Object principal = authentication.getPrincipal();
-
-            if (principal instanceof UserDetails) {
-                Optional<Customer> customer = repo.findByUsername(((UserDetails) principal).getUsername());
-                return customer.get();
-            }
-        }
-
-        throw new NotFoundException("Customer Not Found");
-    }
+    @Autowired
+    private CustomerUtil customerUtil;
 
     @Override
     public Customer save(Customer customer) {
@@ -51,12 +40,12 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer get() {
-        return getCurrentCustomer();
+        return customerUtil.getCurrentCustomer();
     }
 
     @Override
     public Customer update(Long id, Customer customer) {
-        Customer current = getCurrentCustomer();
+        Customer current = customerUtil.getCurrentCustomer();
 
         if (current.getId() == id || current.getRoles().contains("ADMIN")) {
 
