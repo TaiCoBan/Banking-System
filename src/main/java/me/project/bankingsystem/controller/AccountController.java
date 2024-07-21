@@ -2,6 +2,7 @@ package me.project.bankingsystem.controller;
 
 import me.project.bankingsystem.entity.Account;
 import me.project.bankingsystem.entity.Response;
+import me.project.bankingsystem.exception.NotFoundException;
 import me.project.bankingsystem.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,28 +21,33 @@ public class AccountController {
     @PostMapping("create")
     public ResponseEntity<Response> save(@RequestBody Account account) {
         service.save(account);
-        return ResponseEntity.ok().body(new Response(HttpStatus.OK, "Create Account Succesfully"));
+        return ResponseEntity.ok().body(new Response(HttpStatus.OK, "Create Account Successfully"));
     }
 
-    @GetMapping("get/{id}")
-    public ResponseEntity<Account> findById(@PathVariable Long id) {
-        return ResponseEntity.ok().body(service.findById(id).get());
+    @GetMapping("get/{accId}")
+    public ResponseEntity<?> findById(@PathVariable Long accId) {
+        try {
+            Account account = service.findById(accId);
+            return ResponseEntity.ok().body(account);
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        }
     }
 
-    @GetMapping("get-all/{id}")
-    public ResponseEntity<List<Account>> findAll(@PathVariable Long id) {
-        return ResponseEntity.ok().body(service.findAll(id));
+    @GetMapping("get-all/{cusId}")
+    public ResponseEntity<List<Account>> findAll(@PathVariable Long cusId) {
+        return ResponseEntity.ok().body(service.findAll(cusId));
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<Response> update(@PathVariable Long id, @RequestBody Account account) {
-        service.update(id, account);
+    @PutMapping("update/{accId}")
+    public ResponseEntity<Response> update(@PathVariable Long accId, @RequestBody Account account) {
+        service.update(accId, account);
         return ResponseEntity.ok().body(new Response(HttpStatus.OK, "Update Account Succesfully"));
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<Response> delete(@PathVariable Long id) {
-        service.delete(id);
+    @DeleteMapping("delete/{accId}")
+    public ResponseEntity<Response> delete(@PathVariable Long accId) {
+        service.delete(accId);
         return ResponseEntity.ok().body(new Response(HttpStatus.OK, "Delete Account Succesfully"));
     }
 }

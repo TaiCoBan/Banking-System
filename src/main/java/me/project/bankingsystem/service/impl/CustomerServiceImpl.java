@@ -24,9 +24,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private CustomerUtil customerUtil;
-
     @Override
     public Customer save(Customer customer) {
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
@@ -40,16 +37,16 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public Customer get() {
-        return customerUtil.getCurrentCustomer();
+        return CustomerUtil.getCurrentCustomer();
     }
 
     @Override
-    public Customer update(Long id, Customer customer) {
-        Customer current = customerUtil.getCurrentCustomer();
+    public Customer update(Long cusId, Customer customer) {
+        Customer current = CustomerUtil.getCurrentCustomer();
 
-        if (current.getId() == id || current.getRoles().contains("ADMIN")) {
+        if (current.getId() == cusId || current.getRoles().contains("ADMIN")) {
 
-            Optional<Customer> exist = repo.findById(id);
+            Optional<Customer> exist = repo.findById(cusId);
 
             if (exist.isPresent()) {
                 Customer newCus = exist.get();

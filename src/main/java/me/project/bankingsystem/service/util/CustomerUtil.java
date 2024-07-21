@@ -14,21 +14,24 @@ import java.util.Optional;
 @Component
 public class CustomerUtil {
 
-    @Autowired
-    private CustomerRepo repo;
+    private static CustomerRepo customerRepo;
 
-    public Customer getCurrentCustomer() {
+    @Autowired
+    public CustomerUtil(CustomerRepo repo) {
+        CustomerUtil.customerRepo = repo;
+    }
+
+    public static Customer getCurrentCustomer() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated()) {
             Object principal = authentication.getPrincipal();
 
             if (principal instanceof UserDetails) {
-                Optional<Customer> customer = repo.findByUsername(((UserDetails) principal).getUsername());
-                return customer.get();
+                Optional<Customer> customer = customerRepo.findByUsername(((UserDetails) principal).getUsername());
+                return customer.orElseThrow(() -> new NotFoundException("Customer not found with the given username"));
             }
         }
-
-        throw new NotFoundException("Customer Not Found");
+        throw new NotFoundException("Authentication error: Customer not found");
     }
 }

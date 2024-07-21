@@ -5,82 +5,82 @@ import me.project.bankingsystem.entity.Customer;
 import me.project.bankingsystem.exception.NotFoundException;
 import me.project.bankingsystem.repository.AccountRepo;
 import me.project.bankingsystem.service.AccountService;
-import me.project.bankingsystem.service.CustomerService;
 import me.project.bankingsystem.service.util.CustomerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service("account_service_impl")
+@Service
 public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AccountRepo repo;
 
-    @Autowired
-    private CustomerUtil customerUtil;
-
-    private final Customer currentCustomer = customerUtil.getCurrentCustomer();
-
     @Override
     public Account save(Account account) {
+        Customer currentCustomer = CustomerUtil.getCurrentCustomer();
         account.setCustomer(currentCustomer);
+
+        if (account.getAccountNumber() == null || account.getAccountNumber().isEmpty()) {
+            throw new IllegalArgumentException("Account number cannot be null or empty");
+        }
+
         return repo.save(account);
     }
 
+    // ERROR
     @Override
-    public Optional<Account> findById(Long id) {
-        Optional<Account> account = repo.findById(id);
+    public Account findById(Long accId) {
+        Optional<Account> account = repo.findById(accId);
 
-        if (account.get().getCustomer().equals(currentCustomer)) {
-            return account;
+        if (account.isPresent() && CustomerUtil.getCurrentCustomer().getAccount_id().contains(account.get())) {
+            return account.get();
         }
 
-        throw new NotFoundException("Customer Not Found");
+        throw new NotFoundException("Account Not Found");
     }
 
+    // ERROR
     @Override
-    public List<Account> findAll(Long id) {
-        if (repo.findById(id).get().equals(currentCustomer)) {
+    public List<Account> findAll(Long cusId) {
+        if (CustomerUtil.getCurrentCustomer().getId() == cusId) {
             return repo.findAll();
         }
-        throw new NotFoundException("Customer Not Found");
+
+        throw new NotFoundException("Account Not Found");
     }
 
     @Override
-    public Account update(Long id, Account account) {
-        Optional<Account> currentAccount = repo.findById(id);
+    public Account update(Long accId, Account account) {
+        Optional<Account> currentAccount = repo.findById(accId);
 
         if (currentAccount.isEmpty()) {
-            throw new NotFoundException("Account Not Found");
+            throw new NotFoundException("Account not found");
         }
-        if (!currentAccount.get().getCustomer().equals(currentCustomer)) {
-            throw new NotFoundException("Customer Not Found");
+        if (!currentAccount.get().getCustomer().equals(CustomerUtil.getCurrentCustomer())) {
+            throw new NotFoundException("Account not found for the current customer");
         }
 
         Account newAcc = currentAccount.get();
         newAcc.setAccountNumber(account.getAccountNumber());
 
-        return repo.save(account);
+        return repo.save(newAcc);
     }
 
     @Override
-    public void delete(Long id) {
-        Optional<Account> account = repo.findById(id);
+    public void delete(Long accId) {
+        Optional<Account> account = repo.findById(accId);
 
-        if (!account.get().getCustomer().equals(currentCustomer)) {
-            throw new NotFoundException("Customer Not Found");
+        if (account.isEmpty() || !account.get().getCustomer().equals(CustomerUtil.getCurrentCustomer())) {
+            throw new NotFoundException("Account not found for the current customer");
         }
-        if (account.isEmpty()) {
-            throw new NotFoundException("Account Not Found");
+
+        if (account.get().getBalance() == 0) {
+            repo.deleteById(accId);
         } else {
-            if (account.get().getBalance() == 0) {
-                repo.deleteById(id);
-            }
+            throw new IllegalArgumentException("Account balance must be zero to delete");
         }
     }
-
 }

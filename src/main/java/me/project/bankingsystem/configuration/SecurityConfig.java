@@ -33,6 +33,14 @@ public class SecurityConfig {
             "/accounts/delete/{id}"
     };
 
+    private static final String[] USER_ADMIN_SOURCES = {
+            "/accounts/create",
+            "/accounts/get/{id}",
+            "/accounts/get-all/{id}",
+            "/account/update/{id}",
+            "/accounts/delete/{id}"
+    };
+
     private static final String[] ADMIN_SOURCES = {
             "/customers/get-all",
             "/customers/delete/{id}",
@@ -49,7 +57,8 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(req -> req
                         .requestMatchers(PUBLIC_SOURCES).permitAll()
-                        .requestMatchers(USER_SOURCES).hasAnyRole("USER")
+                        .requestMatchers(USER_ADMIN_SOURCES).hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(USER_SOURCES).hasRole("USER")
                         .requestMatchers(ADMIN_SOURCES).hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .httpBasic(Customizer.withDefaults())
