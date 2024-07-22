@@ -42,7 +42,11 @@
         "/accounts/get-all/{cusId}",
         "/account/update/{accId}",
         "/accounts/delete/{accId}"
+<<<<<<< HEAD
 ### Endpoints:
+=======
+  ### Endpoints:
+>>>>>>> 565e14fe4be4306812da4b0d0acab664f2b6d0c9
     - "/customers/add": register a new customer
     - "/customers/get": get logged in customer's information
     - "/customers/get-all": get information of all customer
