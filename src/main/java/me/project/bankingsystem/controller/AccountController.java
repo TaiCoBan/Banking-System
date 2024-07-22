@@ -1,5 +1,6 @@
 package me.project.bankingsystem.controller;
 
+import me.project.bankingsystem.dto.AccountDto;
 import me.project.bankingsystem.entity.Account;
 import me.project.bankingsystem.entity.Response;
 import me.project.bankingsystem.exception.NotFoundException;
@@ -27,15 +28,14 @@ public class AccountController {
     @GetMapping("get/{accId}")
     public ResponseEntity<?> findById(@PathVariable Long accId) {
         try {
-            Account account = service.findById(accId);
-            return ResponseEntity.ok().body(account);
+            return ResponseEntity.ok().body(service.findById(accId));
         } catch (NotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
     }
 
     @GetMapping("get-all/{cusId}")
-    public ResponseEntity<List<Account>> findAll(@PathVariable Long cusId) {
+    public ResponseEntity<?> findAll(@PathVariable Long cusId) {
         return ResponseEntity.ok().body(service.findAll(cusId));
     }
 

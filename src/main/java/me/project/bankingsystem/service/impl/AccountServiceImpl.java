@@ -1,22 +1,29 @@
 package me.project.bankingsystem.service.impl;
 
+import me.project.bankingsystem.dto.AccountDto;
 import me.project.bankingsystem.entity.Account;
 import me.project.bankingsystem.entity.Customer;
 import me.project.bankingsystem.exception.NotFoundException;
+import me.project.bankingsystem.mapper.AccountMapper;
 import me.project.bankingsystem.repository.AccountRepo;
 import me.project.bankingsystem.service.AccountService;
 import me.project.bankingsystem.service.util.CustomerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AccountServiceImpl implements AccountService {
 
     @Autowired
     private AccountRepo repo;
+
+    @Autowired
+    private AccountMapper accountMapper;
 
     @Override
     public Account save(Account account) {
@@ -30,26 +37,34 @@ public class AccountServiceImpl implements AccountService {
         return repo.save(account);
     }
 
-    // ERROR
     @Override
-    public Account findById(Long accId) {
+    public AccountDto findById(Long accId) {
         Optional<Account> account = repo.findById(accId);
 
         if (account.isPresent() && CustomerUtil.getCurrentCustomer().getAccount_id().contains(account.get())) {
-            return account.get();
+            return accountMapper.toDto(account.get());
         }
 
         throw new NotFoundException("Account Not Found");
     }
 
-    // ERROR
     @Override
-    public List<Account> findAll(Long cusId) {
+    public List<AccountDto> findAll(Long cusId) {
         if (CustomerUtil.getCurrentCustomer().getId() == cusId) {
-            return repo.findAll();
+            List<AccountDto> list = repo.findAll().stream().map(account -> accountMapper.toDto(account))
+                    .collect(Collectors.toList());
+
+            List<AccountDto> r = new ArrayList<>();
+            for (AccountDto dto : list) {
+                if (accountMapper.toAccount(dto).getCustomer().getId() == cusId) {
+                    r.add(dto);
+                }
+            }
+
+            return r;
         }
 
-        throw new NotFoundException("Account Not Found");
+        throw new NotFoundException("Customer Not Found");
     }
 
     @Override
