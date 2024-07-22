@@ -33,15 +33,15 @@ public class CustomerController {
         return ResponseEntity.ok().body(service.findAll());
     }
 
-    @PutMapping("update/{id}")
-    public ResponseEntity<Response> update(@PathVariable Long id, @RequestBody Customer customer) {
-        service.update(id, customer);
+    @PutMapping("update/{cusId}")
+    public ResponseEntity<Response> update(@PathVariable Long cusId, @RequestBody Customer customer) {
+        service.update(cusId, customer);
         return ResponseEntity.ok().body(new Response(HttpStatus.OK, "Update Customer Successfully"));
     }
 
-    @DeleteMapping("delete/{id}")
-    public ResponseEntity<Response> delete(@PathVariable Long id) {
-        service.delete(id);
+    @DeleteMapping("delete/{cusId}")
+    public ResponseEntity<Response> delete(@PathVariable Long cusId) {
+        service.delete(cusId);
         return ResponseEntity.ok().body(new Response(HttpStatus.OK, "Delete Customer Successfully"));
     }
 }

@@ -35,11 +35,13 @@ public class CustomerServiceImpl implements CustomerService {
         return repo.findAll();
     }
 
+    //get infor of current customer
     @Override
     public Customer get() {
         return CustomerUtil.getCurrentCustomer();
     }
 
+    // update current cus
     @Override
     public Customer update(Long cusId, Customer customer) {
         Customer current = CustomerUtil.getCurrentCustomer();

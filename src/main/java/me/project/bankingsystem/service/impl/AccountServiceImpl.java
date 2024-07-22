@@ -37,6 +37,7 @@ public class AccountServiceImpl implements AccountService {
         return repo.save(account);
     }
 
+    // find account of current customer
     @Override
     public AccountDto findById(Long accId) {
         Optional<Account> account = repo.findById(accId);
@@ -48,6 +49,7 @@ public class AccountServiceImpl implements AccountService {
         throw new NotFoundException("Account Not Found");
     }
 
+    // find all account of current customer
     @Override
     public List<AccountDto> findAll(Long cusId) {
         if (CustomerUtil.getCurrentCustomer().getId() == cusId) {
@@ -67,6 +69,7 @@ public class AccountServiceImpl implements AccountService {
         throw new NotFoundException("Customer Not Found");
     }
 
+    // update account of current customer
     @Override
     public Account update(Long accId, Account account) {
         Optional<Account> currentAccount = repo.findById(accId);
@@ -84,6 +87,7 @@ public class AccountServiceImpl implements AccountService {
         return repo.save(newAcc);
     }
 
+    // delete account of current customer
     @Override
     public void delete(Long accId) {
         Optional<Account> account = repo.findById(accId);
