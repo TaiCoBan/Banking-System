@@ -25,30 +25,31 @@ public class SecurityConfig {
 
     private static final String[] USER_SOURCES = {
             "/customers/get",
-            "/customers/update/{id}",
+            "/customers/update/{cusId}",
             "/accounts/create",
-            "/accounts/get/{id}",
-            "/accounts/get-all/{id}",
-            "/account/update/{id}",
-            "/accounts/delete/{id}"
+            "/accounts/get/{accId}",
+            "/accounts/get-all/{cusId}",
+            "/account/update/{accId}",
+            "/accounts/delete/{accId}"
     };
 
     private static final String[] USER_ADMIN_SOURCES = {
             "/accounts/create",
-            "/accounts/get/{id}",
-            "/accounts/get-all/{id}",
-            "/account/update/{id}",
-            "/accounts/delete/{id}"
+            "/accounts/get/{accId}",
+            "/accounts/get-all/{cusId}",
+            "/account/update/{accId}",
+            "/accounts/delete/{accId}",
+            "/transactions/deposit/{cusId}/{accId}"
     };
 
     private static final String[] ADMIN_SOURCES = {
             "/customers/get-all",
-            "/customers/delete/{id}",
+            "/customers/delete/{cusId}",
             "/accounts/create",
-            "/accounts/get/{id}",
-            "/accounts/get-all/{id}",
-            "/account/update/{id}",
-            "/accounts/delete/{id}"
+            "/accounts/get/{accId}",
+            "/accounts/get-all/{cusId}",
+            "/account/update/{accId}",
+            "/accounts/delete/{accId}"
     };
 
     @Bean

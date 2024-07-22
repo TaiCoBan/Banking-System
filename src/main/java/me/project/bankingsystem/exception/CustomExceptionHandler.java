@@ -14,4 +14,16 @@ public class CustomExceptionHandler {
     public Response handleNotFoundException(NotFoundException ex, WebRequest request) {
         return new Response(HttpStatus.NOT_FOUND, ex.getMessage());
     }
+
+    @ExceptionHandler(UnauthorizedException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public Response handleUnauthorizedException(UnauthorizedException ex) {
+        return new Response(HttpStatus.UNAUTHORIZED, ex.getMessage());
+    }
+
+    @ExceptionHandler(InvalidParamException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Response handleInvalidParamException(UnauthorizedException ex) {
+        return new Response(HttpStatus.BAD_REQUEST, ex.getMessage());
+    }
 }

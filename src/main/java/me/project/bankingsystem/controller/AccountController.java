@@ -22,7 +22,7 @@ public class AccountController {
     @PostMapping("create")
     public ResponseEntity<Response> save(@RequestBody Account account) {
         service.save(account);
-        return ResponseEntity.ok().body(new Response(HttpStatus.OK, "Create Account Successfully"));
+        return ResponseEntity.ok().body(new Response(HttpStatus.CREATED, "Create Account Successfully"));
     }
 
     @GetMapping("get/{accId}")
