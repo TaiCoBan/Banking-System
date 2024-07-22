@@ -42,12 +42,12 @@ public class AccountController {
     @PutMapping("update/{accId}")
     public ResponseEntity<Response> update(@PathVariable Long accId, @RequestBody Account account) {
         service.update(accId, account);
-        return ResponseEntity.ok().body(new Response(HttpStatus.OK, "Update Account Succesfully"));
+        return ResponseEntity.ok().body(new Response(HttpStatus.OK, "Update Account Successfully"));
     }
 
     @DeleteMapping("delete/{accId}")
     public ResponseEntity<Response> delete(@PathVariable Long accId) {
         service.delete(accId);
-        return ResponseEntity.ok().body(new Response(HttpStatus.OK, "Delete Account Succesfully"));
+        return ResponseEntity.ok().body(new Response(HttpStatus.OK, "Delete Account Successfully"));
     }
 }

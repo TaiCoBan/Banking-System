@@ -1,7 +1,7 @@
-﻿# Banking-System
+﻿﻿# Banking-System
 
 ## DATABASE
-  ### Table: 
+### Table:
     customer:
       - id
       - first_name
@@ -16,15 +16,15 @@
       - account_number
       - balance
       - customer_id
-  ### Relationship
+### Relationship
     customer – account relationship
       One to Many Relationship: One customer is allowed to create many accounts.
       Foreign Key: customer_id in account Table is referencing id in customer Table.
 
 ## Service
-  ### Authentication
+### Authentication
     Basic Authentication
-  ### Authorization
+### Authorization
     Roles-based 
     - "USER": 
         "/customers/get",
@@ -42,7 +42,7 @@
         "/accounts/get-all/{cusId}",
         "/account/update/{accId}",
         "/accounts/delete/{accId}"
-  ### Endpoints:
+### Endpoints:
     - "/customers/add": register a new customer
     - "/customers/get": get logged in customer's information
     - "/customers/get-all": get information of all customer
