@@ -46,7 +46,7 @@ public class AccountServiceImpl implements AccountService {
             return accountMapper.toDto(account.get());
         }
 
-        throw new NotFoundException("Account Not Found");
+        throw new NotFoundException("Not Authorized");
     }
 
     // find all account of current customer
@@ -66,7 +66,7 @@ public class AccountServiceImpl implements AccountService {
             return r;
         }
 
-        throw new NotFoundException("Customer Not Found");
+        throw new NotFoundException("Not Authorized");
     }
 
     // update account of current customer

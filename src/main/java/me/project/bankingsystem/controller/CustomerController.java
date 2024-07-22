@@ -24,12 +24,12 @@ public class CustomerController {
     }
 
     @GetMapping("get")
-    public Customer findById() {
-        return service.get();
+    public ResponseEntity<?> findById() {
+        return ResponseEntity.ok().body(service.get());
     }
 
     @GetMapping("get-all")
-    public ResponseEntity<List<Customer>> findAll() {
+    public ResponseEntity<?> findAll() {
         return ResponseEntity.ok().body(service.findAll());
     }
 

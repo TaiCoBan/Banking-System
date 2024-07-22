@@ -30,18 +30,18 @@
         "/customers/get",
         "/customers/update/{cusId}",
         "/accounts/create",
-        "/accounts/get/{id}",
-        "/accounts/get-all/{id}",
-        "/account/update/{id}",
-        "/accounts/delete/{id}"
+        "/accounts/get/{accId}",
+        "/accounts/get-all/{cusId}",
+        "/account/update/{accId}",
+        "/accounts/delete/{accId}"
     - "ADMIN": 
         "/customers/get-all",
         "/customers/delete/{cusId}",
         "/accounts/create",
-        "/accounts/get/{id}",
-        "/accounts/get-all/{id}",
-        "/account/update/{id}",
-        "/accounts/delete/{id}"
+        "/accounts/get/{accId}",
+        "/accounts/get-all/{cusId}",
+        "/account/update/{accId}",
+        "/accounts/delete/{accId}"
   ### Endpoints:
     - "/customers/add": register a new customer
     - "/customers/get": get logged in customer's information

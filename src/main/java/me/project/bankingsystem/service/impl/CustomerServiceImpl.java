@@ -1,17 +1,17 @@
 package me.project.bankingsystem.service.impl;
 
+import me.project.bankingsystem.dto.CustomerDto;
 import me.project.bankingsystem.entity.Customer;
 import me.project.bankingsystem.exception.NotFoundException;
+import me.project.bankingsystem.mapper.CustomerMapper;
 import me.project.bankingsystem.repository.CustomerRepo;
 import me.project.bankingsystem.service.CustomerService;
 import me.project.bankingsystem.service.util.CustomerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,6 +24,9 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private CustomerMapper customerMapper;
+
     @Override
     public Customer save(Customer customer) {
         customer.setPassword(passwordEncoder.encode(customer.getPassword()));
@@ -31,14 +34,18 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public List<Customer> findAll() {
-        return repo.findAll();
+    public List<CustomerDto> findAll() {
+        List<CustomerDto> list = new ArrayList<>();
+        for (Customer c : repo.findAll()) {
+            list.add(customerMapper.toDto(c));
+        }
+        return list;
     }
 
     //get infor of current customer
     @Override
-    public Customer get() {
-        return CustomerUtil.getCurrentCustomer();
+    public CustomerDto get() {
+        return customerMapper.toDto(CustomerUtil.getCurrentCustomer());
     }
 
     // update current cus
