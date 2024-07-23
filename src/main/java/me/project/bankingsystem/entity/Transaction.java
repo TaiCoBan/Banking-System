@@ -30,4 +30,7 @@ public class Transaction {
 
     @Column(name = "timestamp", nullable = false)
     private LocalDateTime timestamp;
+
+    @Column(name = "status", nullable = false)
+    private String status;
 }

@@ -49,13 +49,13 @@ public class TransactionServiceImpl implements TransactionService {
         bank.setBalance(bank.getBalance() + amount);
         accountRepo.save(bank);
         LocalDateTime timestamp = LocalDateTime.now();
-        logTransaction(bank.getId(), amount, "", "deposit", timestamp);
+        logTransaction(bank.getId(), amount, "", "deposit", timestamp, "+" + amount);
 
-        return logTransaction(accId, amount, content, "deposit", timestamp);
+        return logTransaction(accId, amount, content, "deposit", timestamp, "+" + amount);
     }
 
 
-    private Transaction logTransaction(Long accId, long amount, String content, String type, LocalDateTime timstamp) {
+    private Transaction logTransaction(Long accId, long amount, String content, String type, LocalDateTime timstamp, String status) {
         Transaction transaction = new Transaction();
 
         transaction.setAccountId(accId);
@@ -63,6 +63,7 @@ public class TransactionServiceImpl implements TransactionService {
         transaction.setAmount(amount);
         transaction.setContent(content);
         transaction.setTimestamp(timstamp);
+        transaction.setStatus(status);
 
         return transactionRepo.save(transaction);
     }
