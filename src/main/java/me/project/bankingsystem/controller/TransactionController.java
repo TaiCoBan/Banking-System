@@ -2,6 +2,7 @@ package me.project.bankingsystem.controller;
 
 import me.project.bankingsystem.dto.DepositRequest;
 import me.project.bankingsystem.entity.Response;
+import me.project.bankingsystem.entity.Transaction;
 import me.project.bankingsystem.service.TransactionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,4 +26,11 @@ public class TransactionController {
         return ResponseEntity.ok().body(service.deposit(accId, amount, content));
     }
 
+    @PostMapping("withdraw/{accId}/{atmId}")
+    public ResponseEntity<?> withdraw(@RequestBody Map<String, Long> amount,
+                                @PathVariable Long accId,
+                                @PathVariable Long atmId) {
+        Long money = amount.get("amount");
+        return ResponseEntity.ok().body(service.withdraw(money, accId, atmId));
+    }
 }

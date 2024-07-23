@@ -3,6 +3,7 @@ package me.project.bankingsystem.service.impl;
 import me.project.bankingsystem.entity.Account;
 import me.project.bankingsystem.entity.Customer;
 import me.project.bankingsystem.entity.Transaction;
+import me.project.bankingsystem.exception.InvalidParamException;
 import me.project.bankingsystem.exception.NotFoundException;
 import me.project.bankingsystem.exception.UnauthorizedException;
 import me.project.bankingsystem.mapper.TransactionMapper;
@@ -15,9 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -55,6 +53,37 @@ public class TransactionServiceImpl implements TransactionService {
     }
 
 
+
+    @Override
+    public List<Transaction> getAll(Long cusId) {
+        Customer currentCustomer = CustomerUtil.getCurrentCustomer();
+
+        if (customerRepo.findById(cusId).get().equals(currentCustomer)) {
+            return repo.findAll();
+        }
+        throw new UnauthorizedException("Customer Unauthorized id = " + cusId);
+    }
+
+    @Override
+    public Transaction withdraw(Long money, Long accId, Long atmId) {
+        Customer currentCus = CustomerUtil.getCurrentCustomer();
+        Account account = accountRepo.findById(accId).orElseThrow(() -> new NotFoundException("Account Not Found id = " + accId));
+        Account bank = accountRepo.findByAccountNumber("bank");
+
+        if (account.getCustomer().equals(currentCus)) {
+            if (account.getBalance() >= money && bank.getBalance() >= money) {
+                account.setBalance(account.getBalance() - money);
+                accountRepo.save(account);
+
+                bank.setBalance(bank.getBalance() - money);
+                accountRepo.save(bank);
+
+                return logTransaction(accId, money, "", "withdraw", LocalDateTime.now(), "-"+money);
+            }
+        }
+        throw new InvalidParamException("Insufficient Balance");
+    }
+
     private Transaction logTransaction(Long accId, long amount, String content, String type, LocalDateTime timstamp, String status) {
         Transaction transaction = new Transaction();
 
@@ -67,17 +96,5 @@ public class TransactionServiceImpl implements TransactionService {
 
         return transactionRepo.save(transaction);
     }
-
-
-    @Override
-    public List<Transaction> getAll(Long cusId) {
-        Customer currentCustomer = CustomerUtil.getCurrentCustomer();
-
-        if (customerRepo.findById(cusId).get().equals(currentCustomer)) {
-            return repo.findAll();
-        }
-        throw new UnauthorizedException("Customer Unauthorized id = " + cusId);
-    }
-
 
 }

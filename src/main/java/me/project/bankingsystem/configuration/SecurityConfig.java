@@ -29,7 +29,7 @@ public class SecurityConfig {
             "/accounts/create",
             "/accounts/get/{accId}",
             "/accounts/get-all/{cusId}",
-            "/account/update/{accId}",
+            "/accounts/update/{accId}",
             "/accounts/delete/{accId}"
     };
 
@@ -37,9 +37,10 @@ public class SecurityConfig {
             "/accounts/create",
             "/accounts/get/{accId}",
             "/accounts/get-all/{cusId}",
-            "/account/update/{accId}",
+            "/accounts/update/{accId}",
             "/accounts/delete/{accId}",
-            "/transactions/deposit/{cusId}/{accId}"
+            "/transactions/deposit/{accId}",
+            "/transactions/withdraw/{accId}/{atmId}"
     };
 
     private static final String[] ADMIN_SOURCES = {
@@ -48,8 +49,11 @@ public class SecurityConfig {
             "/accounts/create",
             "/accounts/get/{accId}",
             "/accounts/get-all/{cusId}",
-            "/account/update/{accId}",
-            "/accounts/delete/{accId}"
+            "/accounts/update/{accId}",
+            "/accounts/delete/{accId}",
+            "/ATMs/install",
+            "/ATMs/cash-to-atm/{atmId}",
+            "/ATMs/uninstall/{atmId}"
     };
 
     @Bean
