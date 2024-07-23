@@ -40,10 +40,4 @@ public class Customer {
 
     @Column(name = "roles", nullable = false)
     private String roles = "USER";
-
-    @OneToOne(mappedBy = "sender")
-    private Transaction from;
-
-    @OneToOne(mappedBy = "receiver")
-    private Transaction to;
 }

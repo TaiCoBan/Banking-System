@@ -17,14 +17,12 @@ public class TransactionController {
     @Autowired
     private TransactionService service;
 
-    @PostMapping("deposit/{fromCusId}/{toCusId}/{toAccId}")
-    public ResponseEntity<?> deposit(@PathVariable Long fromCusId,
-                                     @PathVariable Long toCusId,
-                                     @PathVariable Long toAccId,
+    @PostMapping("deposit/{accId}")
+    public ResponseEntity<?> deposit(@PathVariable Long accId,
                                      @RequestBody DepositRequest depositRequest) {
         Long amount = depositRequest.getAmount();
         String content = depositRequest.getContent();
-        return ResponseEntity.ok().body(service.deposit(fromCusId, toCusId, toAccId, amount, content));
+        return ResponseEntity.ok().body(service.deposit(accId, amount, content));
     }
 
 }

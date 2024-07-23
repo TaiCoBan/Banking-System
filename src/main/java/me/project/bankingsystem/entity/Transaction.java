@@ -16,26 +16,16 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "sender_id", referencedColumnName = "id", nullable = false)
-    private Customer sender;
+    @Column(name = "account_id", nullable = false)
+    private Long accountId;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "receiver_id", referencedColumnName = "id", nullable = false)
-    private Customer receiver;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "sender_account_id", referencedColumnName = "id", nullable = true)
-    private Account senderAccount;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "receiver_account_id", referencedColumnName = "id", nullable = false)
-    private Account receiverAccount;
+    @Column(name = "transaction_type", nullable = false)
+    private String transactionType;
 
     @Column(name = "amount", nullable = false)
     private long amount;
 
-    @Column(name = "content")
+    @Column(name = "content", nullable = false)
     private String content;
 
     @Column(name = "timestamp", nullable = false)

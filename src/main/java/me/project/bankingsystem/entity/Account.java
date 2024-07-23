@@ -3,6 +3,8 @@ package me.project.bankingsystem.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -24,9 +26,4 @@ public class Account {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    @OneToOne(mappedBy = "senderAccount")
-    private Transaction from;
-
-    @OneToOne(mappedBy = "receiverAccount")
-    private Transaction to;
 }

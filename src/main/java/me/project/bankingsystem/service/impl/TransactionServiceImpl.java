@@ -1,10 +1,8 @@
 package me.project.bankingsystem.service.impl;
 
-import me.project.bankingsystem.dto.TransactionDto;
 import me.project.bankingsystem.entity.Account;
 import me.project.bankingsystem.entity.Customer;
 import me.project.bankingsystem.entity.Transaction;
-import me.project.bankingsystem.exception.InvalidParamException;
 import me.project.bankingsystem.exception.NotFoundException;
 import me.project.bankingsystem.exception.UnauthorizedException;
 import me.project.bankingsystem.mapper.TransactionMapper;
@@ -17,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -38,56 +39,32 @@ public class TransactionServiceImpl implements TransactionService {
     private TransactionRepo transactionRepo;
 
     @Override
-    public TransactionDto deposit(Long fromCusId, Long toCusId, Long toAccId, Long amount, String content) {
-        Customer currentCus = CustomerUtil.getCurrentCustomer();
+    public Transaction deposit(Long accId, Long amount, String content) {
 
-        if (currentCus.getId() != fromCusId) {
-            throw new UnauthorizedException("Customer Unauthorized id = " + fromCusId);
-        } else if (amount <= 0) {
-            throw new InvalidParamException("Amount must be greater than 0");
-        }
-
-        Account account = accountRepo.findById(toAccId).orElseThrow(() -> new NotFoundException("Account Not Found"));
-
-        // Cong tien vao TK KH
+        Account account = accountRepo.findById(accId).orElseThrow(() -> new NotFoundException("Account Not Found"));
         account.setBalance(account.getBalance() + amount);
         accountRepo.save(account);
 
-        // Cong tien vao TK NH
         Account bank = accountRepo.findByAccountNumber("bank");
         bank.setBalance(bank.getBalance() + amount);
         accountRepo.save(bank);
+        LocalDateTime timestamp = LocalDateTime.now();
+        logTransaction(bank.getId(), amount, "", "deposit", timestamp);
 
-        // Log lich su giao dich
-        Customer sender = currentCus;
-        Customer receiver = customerRepo.findById(toCusId).get();
-        Account senderAcc = null;
-        Account receiverAcc = account;
-        // amount
-        // content
-        return logTransaction(sender, receiver, senderAcc, receiverAcc, amount, content);
+        return logTransaction(accId, amount, content, "deposit", timestamp);
     }
 
 
-    private TransactionDto logTransaction(Customer sender,
-                                          Customer receiver,
-                                          Account senderAcc,
-                                          Account receiverAcc,
-                                          long amount,
-                                          String content
-                                          ) {
+    private Transaction logTransaction(Long accId, long amount, String content, String type, LocalDateTime timstamp) {
         Transaction transaction = new Transaction();
 
-        transaction.setSender(sender);
-        transaction.setReceiver(receiver);
-        transaction.setSenderAccount(senderAcc);
-        transaction.setReceiverAccount(receiverAcc);
+        transaction.setAccountId(accId);
+        transaction.setTransactionType(type);
         transaction.setAmount(amount);
         transaction.setContent(content);
-        transaction.setTimestamp(LocalDateTime.now());
+        transaction.setTimestamp(timstamp);
 
-        transactionRepo.save(transaction);
-        return transactionMapper.toDto(transaction);
+        return transactionRepo.save(transaction);
     }
 
 
