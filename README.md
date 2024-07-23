@@ -16,6 +16,19 @@
       - account_number
       - balance
       - customer_id
+    transaction:
+      - id
+      - account_id
+      - transaction_type
+      - amount
+      - content
+      - timestamp
+      - status
+    atm:
+      - id
+      - cash_amount
+      - location
+      - installed_date
 ### Relationship
     customer – account relationship
       One to Many Relationship: One customer is allowed to create many accounts.
@@ -33,7 +46,10 @@
         "/accounts/get/{accId}",
         "/accounts/get-all/{cusId}",
         "/account/update/{accId}",
-        "/accounts/delete/{accId}"
+        "/accounts/delete/{accId}",
+        "/transactions/deposit/{accId}",
+        "/transactions/withdraw/{accId}/{atmId}",
+        "withdraw/{accId}/{atmId}"
     - "ADMIN": 
         "/customers/get-all",
         "/customers/delete/{cusId}",
@@ -41,7 +57,13 @@
         "/accounts/get/{accId}",
         "/accounts/get-all/{cusId}",
         "/account/update/{accId}",
-        "/accounts/delete/{accId}"
+        "/accounts/delete/{accId}",
+        "/transactions/deposit/{accId}",
+        "/transactions/withdraw/{accId}/{atmId}",
+        "/ATMs/install",
+        "ATMs/uninstall/{atmId}",
+        "cash-to-atm/{atmId}"
+        "withdraw/{accId}/{atmId}"
 ### Endpoints:
   ### Endpoints:
     - "/customers/add": register a new customer
@@ -56,5 +78,11 @@
     - "/accounts/update/{accId}": update account
     - "/accounts/delete/{accId}": delete account
     
-    
+    - "/transactions/deposit/{accId}": deposit
+    - "/transactions/withdraw/{accId}/{atmId}": withdraw from account
       
+    - "/ATMs/install": install ATM
+    - "/ATMs/cash-to-atm/{atmId}": send cash to ATM
+    - "/ATMs/uninstall/{atmId}": uninstall ATM 
+    - "/ATMs/withdraw/{accId}/{atmId}": withdraw cash from ATM   
+    

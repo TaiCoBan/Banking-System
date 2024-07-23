@@ -66,7 +66,7 @@ public class ATMServiceImpl implements ATMService {
     }
 
     @Override
-    public Transaction withdraw(Long accId, Long atmId, Long amount) {
+    public Transaction withdrawATM(Long accId, Long atmId, Long amount) {
         Account account = accountRepo.findById(accId).orElseThrow(() -> new NotFoundException("Account Not Found id = " + accId));
         ATM atm = repo.findById(atmId).orElseThrow(() -> new NotFoundException("ATM Not Found id = " + atmId));
 

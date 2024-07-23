@@ -10,5 +10,5 @@ public interface ATMService {
 
     String cashToATM(Long cash, Long atmId);
 
-    Transaction withdraw(Long accId, Long atmId, Long amount);
+    Transaction withdrawATM(Long accId, Long atmId, Long amount);
 }

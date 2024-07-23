@@ -32,8 +32,8 @@ public class ATMController {
         return service.unistall(atmId);
     }
 
-    @PostMapping("/withdraw/{accId}/{atmId}")
+    @PostMapping("withdraw/{accId}/{atmId}")
     public ResponseEntity<?> withdraw(@PathVariable Long accId, @PathVariable Long atmId, @RequestBody Map<String, Long> req) {
-        return ResponseEntity.ok().body(service.withdraw(accId, atmId, req.get("amount")));
+        return ResponseEntity.ok().body(service.withdrawATM(accId, atmId, req.get("amount")));
     }
 }
