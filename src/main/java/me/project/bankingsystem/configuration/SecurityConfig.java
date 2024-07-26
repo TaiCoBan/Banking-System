@@ -24,18 +24,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private static final String[] PUBLIC_SOURCES = {
-            "/customers/add"
-    };
-
-    private static final String[] USER_SOURCES = {
-            "/customers/get",
-            "/customers/update/{cusId}",
-            "/accounts/create",
-            "/accounts/get/{accId}",
-            "/accounts/get-all/{cusId}",
-            "/accounts/update/{accId}",
-            "/accounts/delete/{accId}",
-            "/test/user"
+            "/customers/add",
+            "/auth/generate-token"
     };
 
     private static final String[] USER_ADMIN_SOURCES = {
@@ -45,18 +35,18 @@ public class SecurityConfig {
             "/accounts/update/{accId}",
             "/accounts/delete/{accId}",
             "/transactions/deposit/{accId}",
-            "/transactions/withdraw/{accId}/{atmId}",
-            "/auth/generate-token"
+            "/transactions/withdraw/{accId}/{atmId}"
+    };
+    
+    private static final String[] USER_SOURCES = {
+            "/customers/get",
+            "/customers/update/{cusId}",
+            "/test/user"
     };
 
     private static final String[] ADMIN_SOURCES = {
             "/customers/get-all",
             "/customers/delete/{cusId}",
-            "/accounts/create",
-            "/accounts/get/{accId}",
-            "/accounts/get-all/{cusId}",
-            "/accounts/update/{accId}",
-            "/accounts/delete/{accId}",
             "/ATMs/install",
             "/ATMs/cash-to-atm/{atmId}",
             "/ATMs/uninstall/{atmId}",
@@ -71,34 +61,10 @@ public class SecurityConfig {
         httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(req -> req
-                        .requestMatchers("/customers/add",
-                                "/auth/generate-token").permitAll()
-                        .requestMatchers("/accounts/create",
-                                "/accounts/get/{accId}",
-                                "/accounts/get-all/{cusId}",
-                                "/accounts/update/{accId}",
-                                "/accounts/delete/{accId}",
-                                "/transactions/deposit/{accId}",
-                                "/transactions/withdraw/{accId}/{atmId}").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/customers/get",
-                                "/customers/update/{cusId}",
-                                "/accounts/create",
-                                "/accounts/get/{accId}",
-                                "/accounts/get-all/{cusId}",
-                                "/accounts/update/{accId}",
-                                "/accounts/delete/{accId}",
-                                "/test/user").hasRole("USER")
-                        .requestMatchers("/customers/get-all",
-                                "/customers/delete/{cusId}",
-                                "/accounts/create",
-                                "/accounts/get/{accId}",
-                                "/accounts/get-all/{cusId}",
-                                "/accounts/update/{accId}",
-                                "/accounts/delete/{accId}",
-                                "/ATMs/install",
-                                "/ATMs/cash-to-atm/{atmId}",
-                                "/ATMs/uninstall/{atmId}",
-                                "/test/admin").hasRole("ADMIN")
+                        .requestMatchers(PUBLIC_SOURCES).permitAll()
+                        .requestMatchers(USER_ADMIN_SOURCES).hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(USER_SOURCES).hasRole("USER")
+                        .requestMatchers(ADMIN_SOURCES).hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider())

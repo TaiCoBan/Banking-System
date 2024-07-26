@@ -9,6 +9,9 @@ import me.project.bankingsystem.repository.AccountRepo;
 import me.project.bankingsystem.service.AccountService;
 import me.project.bankingsystem.service.util.CustomerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -39,6 +42,7 @@ public class AccountServiceImpl implements AccountService {
 
     // find account of current customer
     @Override
+    @Cacheable(value = "AccountDto", key = "#accId")
     public AccountDto findById(Long accId) {
         Optional<Account> account = repo.findById(accId);
 
@@ -51,6 +55,7 @@ public class AccountServiceImpl implements AccountService {
 
     // find all account of current customer
     @Override
+    @Cacheable(value = "AccountDto")
     public List<AccountDto> findAll(Long cusId) {
         if (CustomerUtil.getCurrentCustomer().getId() == cusId) {
             List<AccountDto> list = repo.findAll().stream().map(account -> accountMapper.toDto(account))
@@ -71,6 +76,7 @@ public class AccountServiceImpl implements AccountService {
 
     // update account of current customer
     @Override
+    @CachePut(value = "AccountDto", key = "#accId")
     public Account update(Long accId, Account account) {
         Optional<Account> currentAccount = repo.findById(accId);
 
@@ -89,6 +95,7 @@ public class AccountServiceImpl implements AccountService {
 
     // delete account of current customer
     @Override
+    @CacheEvict(value = "AccountDto", key = "#accId")
     public void delete(Long accId) {
         Optional<Account> account = repo.findById(accId);
 
