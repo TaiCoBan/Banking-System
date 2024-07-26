@@ -11,6 +11,7 @@ import me.project.bankingsystem.repository.AccountRepo;
 import me.project.bankingsystem.repository.CustomerRepo;
 import me.project.bankingsystem.repository.TransactionRepo;
 import me.project.bankingsystem.service.TransactionService;
+import me.project.bankingsystem.service.util.CacheService;
 import me.project.bankingsystem.service.util.CustomerUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,10 +32,10 @@ public class TransactionServiceImpl implements TransactionService {
     private AccountRepo accountRepo;
 
     @Autowired
-    private TransactionMapper transactionMapper;
+    private TransactionRepo transactionRepo;
 
     @Autowired
-    private TransactionRepo transactionRepo;
+    private CacheService cacheService;
 
     @Override
     public Transaction deposit(Long accId, Long amount, String content) {
@@ -71,7 +72,7 @@ public class TransactionServiceImpl implements TransactionService {
         Account bank = accountRepo.findByAccountNumber("bank");
 
         if (account.getCustomer().equals(currentCus)) {
-            if (account.getBalance() >= money && bank.getBalance() >= money) {
+            if (account.getBalance() >= money && bank.getBalance() >= money && cacheService.canWithdraw(accId+"")) {
                 account.setBalance(account.getBalance() - money);
                 accountRepo.save(account);
 

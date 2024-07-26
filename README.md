@@ -36,7 +36,7 @@
 
 ## Service
 ### Authentication
-    Basic Authentication
+    JWT-based Authentication
 ### Authorization
     Roles-based 
     - "USER": 
@@ -65,7 +65,6 @@
         "cash-to-atm/{atmId}"
         "withdraw/{accId}/{atmId}"
 ### Endpoints:
-  ### Endpoints:
     - "/customers/add": register a new customer
     - "/customers/get": get logged in customer's information
     - "/customers/get-all": get information of all customer
